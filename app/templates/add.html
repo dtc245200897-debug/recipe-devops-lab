@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Thêm công thức mới</h2>
+<form method="post">
+  <label>Tên món</label>
+  <input name="title" required maxlength="200">
+  <label>Danh mục</label>
+  <select name="category_id" required>
+    {% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+  </select>
+  <label>Nguyên liệu (mỗi dòng một nguyên liệu)</label>
+  <textarea name="ingredients" rows="5" required></textarea>
+  <label>Cách làm</label>
+  <textarea name="instructions" rows="6" required></textarea>
+  <button type="submit">Lưu</button>
+</form>
+{% endblock %}

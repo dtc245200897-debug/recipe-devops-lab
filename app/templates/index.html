@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<p>Danh mục:
+  <a href="{{ url_for('index') }}">Tất cả</a>
+  {% for c in categories %}
+    | <a href="{{ url_for('index', category=c.id) }}"
+         {% if selected == c.id %}style="font-weight:bold"{% endif %}>{{ c.name }}</a>
+  {% endfor %}
+</p>
+{% for r in recipes %}
+  <div class="card">
+    <a href="{{ url_for('recipe', recipe_id=r.id) }}"><b>{{ r.title }}</b></a>
+    <span class="tag">{{ r.category }}</span>
+  </div>
+{% else %}
+  <p>Chưa có công thức nào.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ r.title }} <span class="tag">{{ r.category }}</span></h2>
+<h3>Nguyên liệu</h3>
+<p class="pre">{{ r.ingredients }}</p>
+<h3>Cách làm</h3>
+<p class="pre">{{ r.instructions }}</p>
+<form method="post" action="{{ url_for('delete', recipe_id=r.id) }}"
+      onsubmit="return confirm('Xóa công thức này?');">
+  <button class="del" type="submit">Xóa</button>
+</form>
+{% endblock %}
