@@ -1,17 +1,34 @@
 {% extends "base.html" %}
+{% block title %}Thêm công thức · Bếp Nhà{% endblock %}
 {% block content %}
-<h2>Thêm công thức mới</h2>
-<form method="post">
-  <label>Tên món</label>
-  <input name="title" required maxlength="200">
-  <label>Danh mục</label>
-  <select name="category_id" required>
-    {% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
-  </select>
-  <label>Nguyên liệu (mỗi dòng một nguyên liệu)</label>
-  <textarea name="ingredients" rows="5" required></textarea>
-  <label>Cách làm</label>
-  <textarea name="instructions" rows="6" required></textarea>
-  <button type="submit">Lưu</button>
-</form>
+<a class="back-link" href="{{ url_for('index') }}">← Quay lại danh sách công thức</a>
+<section class="page-card">
+  <p class="eyebrow">Sổ tay của bạn</p>
+  <h1 class="page-title">Thêm công thức mới</h1>
+  <form class="form-grid" method="post">
+    <div class="form-field">
+      <label for="title">Tên món</label>
+      <input id="title" name="title" required maxlength="200" placeholder="Ví dụ: Gà chiên nước mắm">
+    </div>
+    <div class="form-field">
+      <label for="category_id">Danh mục</label>
+      <select id="category_id" name="category_id" required>
+        {% for c in categories %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="form-field">
+      <label for="ingredients">Nguyên liệu</label>
+      <textarea id="ingredients" name="ingredients" rows="5" required placeholder="Ghi mỗi nguyên liệu trên một dòng"></textarea>
+      <p class="form-hint">Ghi rõ lượng nguyên liệu để lần sau bạn dễ dàng nấu lại.</p>
+    </div>
+    <div class="form-field">
+      <label for="instructions">Cách làm</label>
+      <textarea id="instructions" name="instructions" rows="6" required placeholder="Mô tả từng bước thực hiện"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="button" type="submit">Lưu công thức</button>
+      <a class="button button-secondary" href="{{ url_for('index') }}">Hủy</a>
+    </div>
+  </form>
+</section>
 {% endblock %}

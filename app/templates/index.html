@@ -1,18 +1,79 @@
 {% extends "base.html" %}
+{% block title %}Bếp Nhà · Công thức nấu ăn{% endblock %}
 {% block content %}
-<p>Danh mục:
-  <a href="{{ url_for('index') }}">Tất cả</a>
+<section class="hero">
+  <h1>Hôm nay nấu món gì?</h1>
+  <p>Lưu giữ và chia sẻ những công thức nấu ăn yêu thích của bạn.</p>
+  <a class="button" href="{{ url_for('add') }}">+ Thêm công thức mới</a>
+</section>
+
+<nav class="category-list" aria-label="Lọc theo danh mục">
+  <a class="category-link{% if not selected %} active{% endif %}"
+     href="{{ url_for('index') }}"{% if not selected %} aria-current="page"{% endif %}>Tất cả</a>
   {% for c in categories %}
-    | <a href="{{ url_for('index', category=c.id) }}"
-         {% if selected == c.id %}style="font-weight:bold"{% endif %}>{{ c.name }}</a>
+    <a class="category-link{% if selected == c.id %} active{% endif %}"
+       href="{{ url_for('index', category=c.id) }}"{% if selected == c.id %} aria-current="page"{% endif %}>
+      {% if c.name == 'Món canh' %}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16l-1.3 6.1a2 2 0 0 1-2 1.6H7.3a2 2 0 0 1-2-1.6L4 12Z"/><path d="M7 9c-1-1 1-1.5 0-2.5M12 9c-1-1 1-1.5 0-2.5M17 9c-1-1 1-1.5 0-2.5"/></svg>
+      {% elif c.name == 'Món chính' %}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21c-4.5 0-7-3-7-6.5 0-2.5 1.4-4.5 3.4-6.5.1 2.4 1.2 3.2 2 3.4-.3-3.6 1.6-6.6 4.1-8.4-.2 3 1 4.4 2.4 6.2 1.1 1.4 2.1 2.9 2.1 5.3 0 3.5-2.5 6.5-7 6.5Z"/><path d="M12 18.5c-1.6 0-2.5-1-2.5-2.3 0-1.1.7-2 1.7-2.9.1.9.6 1.3 1 1.3.1-1.3.8-2.2 1.6-2.8.1 1.3 1.5 2 1.5 4.1 0 1.6-1.2 2.6-3.3 2.6Z"/></svg>
+      {% elif c.name == 'Tráng miệng' %}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16v9H4zM3 20h18M6 11V8h12v3M9 8c0-1.4 1-2.1 3-2.1s3 .7 3 2.1M8 15h.01M12 15h.01M16 15h.01"/></svg>
+      {% endif %}
+      {{ c.name }}
+    </a>
   {% endfor %}
-</p>
-{% for r in recipes %}
-  <div class="card">
-    <a href="{{ url_for('recipe', recipe_id=r.id) }}"><b>{{ r.title }}</b></a>
-    <span class="tag">{{ r.category }}</span>
-  </div>
+</nav>
+
+<p class="recipe-count">{{ recipes|length }} công thức</p>
+
+{% if recipes %}
+  <section class="recipe-grid" aria-label="Danh sách công thức">
+    {% for r in recipes %}
+      <article class="recipe-card">
+        <div class="recipe-art" aria-hidden="true">
+          {% if 'phở' in r.title|lower %}
+            <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M35 29c-5-6 4-7 0-13M59 27c-5-6 4-7 0-13M83 29c-5-6 4-7 0-13" stroke="#df5e91" stroke-width="4" stroke-linecap="round"/>
+              <path d="M19 37h82l-8 25c-2 7-9 11-17 11H44c-8 0-15-4-17-11l-8-25Z" fill="#fffafd" stroke="#cf477d" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M23 39c7-5 13 5 20 0s13 5 20 0 13 5 20 0 12 4 16 1" stroke="#e8a956" stroke-width="4" stroke-linecap="round"/>
+              <path d="M38 33c5-5 8 4 13-1M66 33c5-5 8 4 13-1" stroke="#f2c867" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="38" cy="43" r="3" fill="#78a66a"/><circle cx="77" cy="44" r="3" fill="#78a66a"/>
+              <circle cx="54" cy="43" r="2.5" fill="#c95652"/><circle cx="88" cy="46" r="2.5" fill="#c95652"/>
+              <path d="M28 62h64" stroke="#f1cad8" stroke-width="2"/>
+            </svg>
+          {% elif r.category == 'Món canh' %}
+            <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M39 27c-5-6 4-7 0-13M60 25c-5-6 4-7 0-13M81 27c-5-6 4-7 0-13" stroke="#df5e91" stroke-width="4" stroke-linecap="round"/>
+              <path d="M17 37h86l-8 25c-2 7-9 11-17 11H42c-8 0-15-4-17-11l-8-25Z" fill="#fffafd" stroke="#cf477d" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M21 40c8-5 14 5 22 0s14 5 22 0 14 5 22 0 12 4 15 1" stroke="#e8a956" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="39" cy="44" r="5" fill="#ee8b79"/><circle cx="39" cy="44" r="2" fill="#fff0cb"/>
+              <path d="M58 44c4-7 9-7 13 0-4 6-9 6-13 0Z" fill="#84ae75"/>
+              <circle cx="83" cy="44" r="4" fill="#eac761"/>
+              <path d="M29 62h62" stroke="#f1cad8" stroke-width="2"/>
+            </svg>
+          {% elif r.category == 'Tráng miệng' %}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16v9H4zM3 20h18M6 11V8h12v3M9 8c0-1.4 1-2.1 3-2.1s3 .7 3 2.1M8 15h.01M12 15h.01M16 15h.01"/></svg>
+          {% else %}
+            <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 42h84l-8 21c-2 6-9 10-17 10H43c-8 0-15-4-17-10l-8-21Z" fill="#fffafd" stroke="#cf477d" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M28 41c4-15 15-23 32-23s28 8 32 23H28Z" fill="#fff" stroke="#df5e91" stroke-width="3" stroke-linejoin="round"/>
+              <path d="M39 35c3-4 6 4 9 0s6 4 9 0 6 4 9 0 6 4 9 0 6 4 9 0" stroke="#e6c99d" stroke-width="2" stroke-linecap="round"/>
+              <path d="M29 63h62" stroke="#f1cad8" stroke-width="2"/>
+              <circle cx="47" cy="29" r="2" fill="#f1c65d"/><circle cx="69" cy="25" r="2" fill="#f1c65d"/><circle cx="80" cy="32" r="2" fill="#f1c65d"/>
+            </svg>
+          {% endif %}
+        </div>
+        <div class="recipe-card-content">
+          <span class="tag">{{ r.category }}</span>
+          <a class="recipe-title" href="{{ url_for('recipe', recipe_id=r.id) }}">{{ r.title }}</a>
+          <p class="recipe-description">Mở công thức để xem nguyên liệu và cách làm.</p>
+          <a class="recipe-action" href="{{ url_for('recipe', recipe_id=r.id) }}">Xem công thức →</a>
+        </div>
+      </article>
+    {% endfor %}
+  </section>
 {% else %}
-  <p>Chưa có công thức nào.</p>
-{% endfor %}
+  <div class="empty-state">Chưa có công thức nào trong danh mục này. Hãy thêm món đầu tiên nhé!</div>
+{% endif %}
 {% endblock %}

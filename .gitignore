@@ -13,3 +13,4 @@ __pycache__/
 Thumbs.db
 nginx/certs/*.key
 nginx/certs/*.crt
+.my.cnf

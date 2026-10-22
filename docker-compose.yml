@@ -4,6 +4,11 @@ services:
     image: mysql:8.0
     container_name: recipe-db
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -24,6 +29,11 @@ services:
     build: ./app
     container_name: recipe-web
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       DB_HOST: db
       DB_NAME: ${MYSQL_DATABASE}
@@ -51,6 +61,11 @@ services:
     image: nginx:alpine
     container_name: recipe-nginx
     restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     ports:
       - "80:80"
       - "443:443"
@@ -84,8 +99,10 @@ services:
     image: prom/mysqld-exporter:v0.15.1
     container_name: recipe-mysqld-exporter
     restart: unless-stopped
-    environment:
-      DATA_SOURCE_NAME: "exporter:${EXPORTER_PASSWORD}@(db:3306)/"
+    command:
+      - "--config.my-cnf=/etc/.my.cnf"
+    volumes:
+      - ./.my.cnf:/etc/.my.cnf:ro
     depends_on:
       db:
         condition: service_healthy
@@ -121,7 +138,31 @@ services:
     depends_on:
       - prometheus
 
+  loki:
+    image: grafana/loki:3.1.1
+    container_name: recipe-loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/loki-config.yml
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - loki_data:/loki
+
+  promtail:
+    image: grafana/promtail:3.1.1
+    container_name: recipe-promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/promtail-config.yml
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - loki
+
 volumes:
   db_data:
   prometheus_data:
   grafana_data:
+  loki_data:
