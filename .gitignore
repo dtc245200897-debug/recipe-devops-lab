@@ -1,0 +1,13 @@
+# Bí mật: KHÔNG bao giờ đưa lên GitHub
+.env
+*.key
+*.pem
+
+# Python
+__pycache__/
+*.pyc
+
+# Windows / IDE
+.vscode/
+.idea/
+Thumbs.db
